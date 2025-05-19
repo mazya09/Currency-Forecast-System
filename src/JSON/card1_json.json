@@ -1,0 +1,28 @@
+
+
+[
+    {
+        "id": 1,
+        "title": "Currency forecasting using ARIMA",
+        "description": "Currency forecasting using ARIMA",
+        "image": "/IMG/stat.jpeg"
+    },
+    {
+        "id": 1,
+        "title": "Historical analysis",
+        "description": "Historical analysis",
+        "image": "/IMG/watch.jpeg"
+    },
+    {
+        "id": 1,
+        "title": "Intelligent currency converter",
+        "description": "Intelligent currency converter",
+        "image": "/IMG/dollar.jpeg"
+    },
+    {
+        "id": 1,
+        "title": "Rates from NBKR and Banks",
+        "description": "Rates from NBKR and BanksARIMA",
+        "image": "/IMG/bank.jpeg"
+    }
+]

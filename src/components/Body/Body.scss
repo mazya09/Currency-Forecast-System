@@ -1,0 +1,135 @@
+@import '../../styles/_body';
+@import "../../index";
+
+.body_wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 20px;
+    height: auto;
+    min-height: 90vh;
+    overflow: visible;
+    gap: 30px;
+}
+
+.body_content {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    -webkit-box-shadow: 0 0 $shadow-size 0 $shadow-color;
+    -moz-box-shadow: 0 0 $shadow-size 0 $shadow-color;
+    box-shadow: 0 0 $shadow-size 0 $shadow-color;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: white;
+}
+
+.body_title {
+    color: $text_color;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 300;
+    font-size: 26px;
+    text-align: center;
+}
+
+.body_description {
+    color: $body_description;
+    text-align: center;
+    font-size: 16px;
+    max-width: 800px;
+}
+
+.image_placeholder {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 30px;
+    margin-top: 40px;
+    width: 100%;
+
+    div {
+        text-align: center;
+        padding: 10px;
+        transition: transform 0.3s ease;
+
+        &:hover {
+            transform: scale(1.03);
+        }
+
+        img {
+            width: 100%;
+            max-width: 50px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        h3 {
+            margin-top: 10px;
+            font-size: 18px;
+            color: $text_color;
+        }
+
+        p {
+            font-size: 14px;
+            color: $body_description;
+        }
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+    .body_title {
+        font-size: 22px;
+    }
+
+    .body_description {
+        font-size: 14px;
+    }
+}
+
+.body_link {
+    width: 100%;
+    max-width: 1200px;
+
+    -webkit-box-shadow: 0 0 $shadow-size 0 $shadow-color;
+    -moz-box-shadow: 0 0 $shadow-size 0 $shadow-color;
+    box-shadow: 0 0 $shadow-size 0 $shadow-color;
+    background-color: white;
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 30px;
+    padding: 20px;
+    text-align: center;
+    border-radius: 12px;
+
+    div {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        border: 0.2px solid $shadow-color;
+        padding: 20px;
+        border-radius: 12px;
+    }
+    p{
+        color: $body_description;
+        font-size: 16px;
+    }
+    button{
+        color: $body_description;
+        font-size: 20px;
+        transition: transform 0.3s ease;
+        border-radius: 12px;
+        border: 0.1px solid #6878cf ;
+        color: #6878cf;
+    }
+    button:hover{
+        transform: scale(1.03);
+        color: #6878cf;
+    }
+}        

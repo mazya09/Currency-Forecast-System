@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;1,600&display=swap');
+$body_color: #FFF;
+$text_color: #222;
+$background_color : #f7f7f7;
+$body_description: #a5a5a5;
+
+$shadow-color: rgba(34, 60, 80, 0.2);
+$shadow-size: 8px;
+
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+  box-sizing: border-box;
+}
+body{
+
+    width: 100%;
+    background: $background_color;
+    color: $text_color;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+}
+
+
