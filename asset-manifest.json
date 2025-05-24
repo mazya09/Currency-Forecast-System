@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Currency-Forecast-System/static/css/main.151cedcd.css",
-    "main.js": "/Currency-Forecast-System/static/js/main.bc0d1443.js",
+    "main.js": "/Currency-Forecast-System/static/js/main.4df6e9b8.js",
     "index.html": "/Currency-Forecast-System/index.html",
     "main.151cedcd.css.map": "/Currency-Forecast-System/static/css/main.151cedcd.css.map",
-    "main.bc0d1443.js.map": "/Currency-Forecast-System/static/js/main.bc0d1443.js.map"
+    "main.4df6e9b8.js.map": "/Currency-Forecast-System/static/js/main.4df6e9b8.js.map"
   },
   "entrypoints": [
     "static/css/main.151cedcd.css",
-    "static/js/main.bc0d1443.js"
+    "static/js/main.4df6e9b8.js"
   ]
 }
