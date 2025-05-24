@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Currency-Forecast-System/static/css/main.151cedcd.css",
+    "main.js": "/Currency-Forecast-System/static/js/main.bc0d1443.js",
+    "index.html": "/Currency-Forecast-System/index.html",
+    "main.151cedcd.css.map": "/Currency-Forecast-System/static/css/main.151cedcd.css.map",
+    "main.bc0d1443.js.map": "/Currency-Forecast-System/static/js/main.bc0d1443.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.151cedcd.css",
+    "static/js/main.bc0d1443.js"
+  ]
+}
