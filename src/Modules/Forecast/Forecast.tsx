@@ -1,111 +1,140 @@
-import React, { useState } from "react";
-import { Space, Select, DatePicker, Input, Button } from "antd";
-import type { Dayjs } from "dayjs";
+import React from "react";
+import { observer } from "mobx-react-lite";
+import { Select, DatePicker, Input, Button, notification } from "antd";
+import dayjs, { Dayjs } from "dayjs";
 import "./Forecast.scss";
 import MyChart from "../../components/Grafiki/Grafiki.tsx";
+import { requestStore } from "../../Store/Forecasting.ts";
+import MyTable from "../../components/Table/Table.tsx";
+import currencyList from "../../JSON/currencyList.json";
+import Blockchildren from "../../components/blockchildren/blockchildren.tsx";
+import Blockwrapper from "../../components/blockwrapper/blockwrapper.tsx";
 
-const currencies = [
-  { code: "USD", name: "United States Dollar" },
-  { code: "EUR", name: "Euro" },
+const data = [
+  { key: "1", name: "John", age: 32 },
+  { key: "2", name: "Mary", age: 28 },
 ];
 
-type ForecastData = {
-  currency: string;
-  date: string;
-  endDate: string;
-  amount: string;
-};
+const cols = [
+  { title: "Name", dataIndex: "name", key: "name" },
+  { title: "Age", dataIndex: "age", key: "age" },
+];
 
-export default function Forecast() {
-  const [currency, setCurrency] = useState<string | undefined>(undefined);
-  const [date, setDate] = useState<Dayjs | null>(null);
-  const [amount, setAmount] = useState("");
-  const [forecastData, setForecastData] = useState<ForecastData | null>(null);
+export default observer(function Forecast() {
+  const CONTROL_STYLE: React.CSSProperties = {
+    width: 250,
+    textAlign: "center",
+  };
+  const {
+    currency,
+    startDate,
+    days,
+    result,
+    isLoading,
+    error,
+    setCurrency,
+    setStartDate,
+    setDays,
+    sendRequest,
+  } = requestStore;
 
-  const handleCurrencyChange = (value: string) => setCurrency(value);
+  React.useEffect(() => {
+    if (error) {
+      notification.error({
+        message: "Ошибка",
+        description: error,
+        placement: "topRight",
+      });
+      requestStore.error = null; // очищаем ошибку после показа
+    }
+  }, [error]);
 
-  const handleDateChange = (date: Dayjs | null) => setDate(date);
-
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (!/^\d*$/.test(value)) return; // только цифры
-    setAmount(value);
+  const handleDateChange = (date: Dayjs | null) => {
+    if (date) {
+      setStartDate(date.format("YYYY-MM-DD"));
+    } else {
+      setStartDate("");
+    }
   };
 
-  const sendToBackend = () => {
-    if (!currency || !date || !amount) {
-      alert("Выберите валюту, дату и количество дней");
+  const handleForecast = () => {
+    if (!currency || !startDate || !days) {
+      notification.error({
+        message: "Ошибка",
+        description: "Заполните все поля",
+        placement: "topRight",
+      });
       return;
     }
-
-    const days = parseInt(amount);
-    if (isNaN(days) || days <= 0 || days > 365) {
-      alert("Введите количество дней от 1 до 365");
+    if (days <= 0 || days > 365) {
+      notification.error({
+        message: "Ошибка",
+        description: "Дней должно быть от 1 до 365",
+        placement: "topRight",
+      });
       return;
     }
-
-    const formattedStartDate = date.format("DD.MM.YYYY");
-    const endDate = date.add(days - 1, "day");
-    const formattedEndDate = endDate.format("DD.MM.YYYY");
-
-    const payload: ForecastData = {
-      currency,
-      date: formattedStartDate,
-      endDate: formattedEndDate,
-      amount,
-    };
-
-    console.log("Отправляем на бэк:", payload);
-    setForecastData(payload);
+    sendRequest();
   };
+
+  const parsedDate = startDate ? dayjs(startDate) : null;
+  const endDate = parsedDate?.add(days - 1, "day").format("YYYY-MM-DD");
 
   return (
-    <div className="content_w">
-      <Space className="content_ch">
+    <Blockwrapper>
+      <h1>Currency Forecast</h1>
+      <Blockchildren>
         <Select
-          style={{ width: 250 }}
+          style={CONTROL_STYLE}
           placeholder="Currency"
-          options={currencies.map((c) => ({
+          options={currencyList.map((c) => ({
             label: c.name,
-            value: c.code,
+            value: c.index,
           }))}
-          value={currency}
-          onChange={handleCurrencyChange}
+          value={currency || undefined}
+          onChange={setCurrency}
           allowClear
         />
         <DatePicker
-          style={{ width: 250 }}
+          style={CONTROL_STYLE}
           onChange={handleDateChange}
-          value={date}
+          value={parsedDate}
           format="DD.MM.YYYY"
           placeholder="Start Date"
         />
         <Input
+          style={CONTROL_STYLE}
           type="number"
           min={1}
           max={365}
           placeholder="Forecast Days"
-          value={amount}
-          onChange={handleAmountChange}
-          style={{ width: 250 }}
+          value={days || ""}
+          onChange={(e) => setDays(Number(e.target.value))}
         />
-        <Button type="primary" onClick={sendToBackend} style={{ width: 250 }}>
+        <Button type="primary" onClick={handleForecast} loading={isLoading}>
           Forecast
         </Button>
-      </Space>
+      </Blockchildren>
 
-      {forecastData && (
+      {result && (
         <>
           <div style={{ marginTop: 20 }}>
-            Forecast for <b>{forecastData.currency}</b> from{" "}
-            <b>{forecastData.date}</b> to <b>{forecastData.endDate}</b> for{" "}
-            <b>{forecastData.amount}</b> days in KGS
+            Forecast for <b>{currency}</b> from <b>{startDate}</b> to{" "}
+            <b>{endDate}</b> for <b>{days}</b> days in KGS
           </div>
           <div style={{ width: "80%", height: 500 }}>
-            <MyChart data={forecastData} />
+            <MyChart data={{ currency, date: startDate, amount: days }} />
+          </div>
+          <div>
+            <MyTable
+              dataSource={data}
+              columns={cols}
+              exportFileName="users.csv"
+              autoDownload
+            />
           </div>
         </>
       )}
-    </div>
+    </Blockwrapper>
   );
-}
+});

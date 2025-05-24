@@ -24,7 +24,7 @@ export default function Body() {
       </div>
       <div className="body_link">
         {link_json.map((item) => (
-          <div key={item.id} style={{border: '1px  solid red'}}>
+          <div key={item.id}>
             
             <h3>{item.title}</h3>
             <p>{item.description}</p>

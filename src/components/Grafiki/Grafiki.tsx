@@ -14,7 +14,7 @@ type Props = {
   data: {
     currency: string;
     date: string;
-    amount: string;
+    amount: number;
   };
 };
 
@@ -25,7 +25,7 @@ const generateChartData = (startDate: string, days: number) => {
     forecast?: number;
   }[] = [];
 
-  const start = new Date(startDate.split(".").reverse().join("-"));
+  const start = new Date(startDate); // уже "YYYY-MM-DD"
 
   for (let i = -5; i < days; i++) {
     const date = new Date(start);
@@ -46,9 +46,9 @@ const generateChartData = (startDate: string, days: number) => {
 };
 
 const MyChart: React.FC<Props> = ({ data }) => {
-    const chartData = useMemo(() => {
-        return generateChartData(data.date, parseInt(data.amount));
-      }, [data.date, data.amount]);
+  const chartData = useMemo(() => {
+    return generateChartData(data.date, data.amount); // ✅ amount — уже number
+  }, [data.date, data.amount]);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -65,7 +65,7 @@ const MyChart: React.FC<Props> = ({ data }) => {
           name="Forecasted Rates"
           strokeDasharray="5 5"
           strokeWidth={2}
-          connectNulls={true}
+          connectNulls
         />
         <Line
           type="monotone"
@@ -74,7 +74,7 @@ const MyChart: React.FC<Props> = ({ data }) => {
           name="Historical Rates"
           strokeWidth={2}
           dot={false}
-          connectNulls={true}
+          connectNulls
         />
       </LineChart>
     </ResponsiveContainer>

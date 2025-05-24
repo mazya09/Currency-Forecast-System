@@ -13,9 +13,9 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({ value, onChang
       value={value}
       onChange={onChange}
       allowClear
-      format="DD.MM.YYYY"
+      format="YYYY-MM-DD"
       inputReadOnly={false}
-      placeholder="Выберите дату или введите вручную"
+      // placeholder="Выберите дату или введите вручную"
     />
   );
 };
