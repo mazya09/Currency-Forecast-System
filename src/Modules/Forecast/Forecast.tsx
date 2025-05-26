@@ -10,21 +10,13 @@ import currencyList from "../../JSON/currencyList.json";
 import Blockchildren from "../../components/blockchildren/blockchildren.tsx";
 import Blockwrapper from "../../components/blockwrapper/blockwrapper.tsx";
 
-const data = [
-  { key: "1", name: "John", age: 32 },
-  { key: "2", name: "Mary", age: 28 },
-];
-
-const cols = [
-  { title: "Name", dataIndex: "name", key: "name" },
-  { title: "Age", dataIndex: "age", key: "age" },
-];
-
 export default observer(function Forecast() {
   const CONTROL_STYLE: React.CSSProperties = {
     width: 250,
     textAlign: "center",
+    marginBottom: 10,
   };
+
   const {
     currency,
     startDate,
@@ -38,6 +30,7 @@ export default observer(function Forecast() {
     sendRequest,
   } = requestStore;
 
+  // Уведомление об ошибке
   React.useEffect(() => {
     if (error) {
       notification.error({
@@ -50,11 +43,7 @@ export default observer(function Forecast() {
   }, [error]);
 
   const handleDateChange = (date: Dayjs | null) => {
-    if (date) {
-      setStartDate(date.format("YYYY-MM-DD"));
-    } else {
-      setStartDate("");
-    }
+    setStartDate(date ? date.format("YYYY-MM-DD") : "");
   };
 
   const handleForecast = () => {
@@ -80,13 +69,46 @@ export default observer(function Forecast() {
   const parsedDate = startDate ? dayjs(startDate) : null;
   const endDate = parsedDate?.add(days - 1, "day").format("YYYY-MM-DD");
 
+  // Преобразуем результат в формат для таблицы
+  const forecastTableData = React.useMemo(() => {
+    if (!Array.isArray(result?.data?.predictedRates) || !startDate) return [];
+
+    return result.data.predictedRates.map((value: number, index: number) => {
+      const date = dayjs(startDate).add(index, "day").format("DD.MM.YYYY");
+      return {
+        key: index,
+        date,
+        value: value.toFixed(4),
+      };
+    });
+  }, [result, startDate]);
+
+  const cols = [
+    { title: "Дата", dataIndex: "date", key: "date" },
+    { title: "Прогноз (KGS)", dataIndex: "value", key: "value" },
+  ];
+
+  const chartData = {
+    currency: result?.data?.currency ?? "",
+    date: result?.data?.startDate ?? "",
+    amount: Array.isArray(result?.data?.predictedRates)
+      ? result.data.predictedRates.length
+      : 0,
+    historicalRates: Array.isArray(result?.data?.historyRates)
+      ? result.data.historyRates
+      : [],
+    predictedRates: Array.isArray(result?.data?.predictedRates)
+      ? result.data.predictedRates
+      : [],
+  };
+
   return (
     <Blockwrapper>
       <h1>Currency Forecast</h1>
       <Blockchildren>
         <Select
           style={CONTROL_STYLE}
-          placeholder="Currency"
+          placeholder="Валюта"
           options={currencyList.map((c) => ({
             label: c.name,
             value: c.index,
@@ -100,36 +122,38 @@ export default observer(function Forecast() {
           onChange={handleDateChange}
           value={parsedDate}
           format="DD.MM.YYYY"
-          placeholder="Start Date"
+          placeholder="Дата начала"
         />
         <Input
           style={CONTROL_STYLE}
           type="number"
           min={1}
           max={365}
-          placeholder="Forecast Days"
+          placeholder="Количество дней"
           value={days || ""}
           onChange={(e) => setDays(Number(e.target.value))}
         />
         <Button type="primary" onClick={handleForecast} loading={isLoading}>
-          Forecast
+          Спрогнозировать
         </Button>
       </Blockchildren>
 
-      {result && (
+      {Array.isArray(result?.data?.predictedRates) && (
         <>
           <div style={{ marginTop: 20 }}>
-            Forecast for <b>{currency}</b> from <b>{startDate}</b> to{" "}
-            <b>{endDate}</b> for <b>{days}</b> days in KGS
+            Прогноз курса <b>{currency}</b> с <b>{startDate}</b> по{" "}
+            <b>{endDate}</b> на <b>{days}</b> дней (в KGS)
           </div>
-          <div style={{ width: "80%", height: 500 }}>
-            <MyChart data={{ currency, date: startDate, amount: days }} />
+
+          <div style={{ width: "80%", height: 500, marginTop: 20 }}>
+            <MyChart data={chartData} />
           </div>
-          <div>
+
+          <div style={{ marginTop: 30 }}>
             <MyTable
-              dataSource={data}
+              dataSource={forecastTableData}
               columns={cols}
-              exportFileName="users.csv"
+              exportFileName={`forecast-${currency}.csv`}
               autoDownload
             />
           </div>

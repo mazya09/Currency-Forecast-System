@@ -1,66 +1,108 @@
-import { Table, Space } from "antd";
-import React, { useEffect } from "react";
+import React from "react";
+import { Table, Button, Space } from "antd";
+import type { ColumnsType, ColumnType } from "antd/es/table";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
+import "./Mytable.scss";
 
-type ColumnType = {
-  title: string;
-  dataIndex: string;
-  key: string;
-  render?: (value: any, record: any, index: number) => React.ReactNode;
-};
-
-type MyTableProps = {
-  dataSource: any[];
-  columns: ColumnType[];
+interface MyTableProps<T> {
+  dataSource: T[];
+  columns: ColumnsType<T>;
+  className?: string;
+  style?: React.CSSProperties;
   exportFileName?: string;
-  autoDownload?: boolean; // если true — скачать сразу при монтировании
-};
+  autoDownload?: boolean;
+}
 
-function convertToCSV(data: any[], columns: ColumnType[]) {
-  const header = columns.map(col => `"${col.title}"`).join(",") + "\n";
 
-  const rows = data.map(row =>
-    columns
-      .map(col => {
-        const value = row[col.dataIndex];
-        return `"${(value ?? "").toString().replace(/"/g, '""')}"`;
+function MyTable<T>({
+  dataSource,
+  columns,
+  className,
+  style,
+  exportFileName,
+}: MyTableProps<T>) {
+  const exportCSV = () => {
+    if (!dataSource.length) return;
+
+    const leafColumns = columns.filter(
+      (col): col is ColumnType<T> => !("children" in col)
+    );
+
+    const headers = leafColumns.map(
+      (col) => col.title?.toString() || col.dataIndex?.toString() || ""
+    );
+
+    const rows = dataSource.map((item) =>
+      leafColumns.map((col) => {
+        const key = col.dataIndex as keyof T;
+        return item[key] ?? "";
       })
-      .join(",")
-  );
+    );
 
-  return header + rows.join("\n");
-}
+    let csvContent = "";
+    csvContent += headers.join(",") + "\n";
+    rows.forEach((row) => {
+      csvContent += row.map((cell) => `"${cell}"`).join(",") + "\n";
+    });
 
-function downloadCSV(csv: string, filename: string) {
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  const url = URL.createObjectURL(blob);
-  link.href = url;
-  link.setAttribute("download", filename);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}
-
-export default function MyTable({ dataSource, columns, exportFileName = "table.csv", autoDownload = false }: MyTableProps) {
-  const handleExport = () => {
-    const csv = convertToCSV(dataSource, columns);
-    downloadCSV(csv, exportFileName);
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    saveAs(blob, exportFileName || "table-data.csv");
   };
 
-  useEffect(() => {
-    if (autoDownload) {
-      handleExport();
-    }
-  }, [autoDownload]);
+  const exportExcel = () => {
+    if (!dataSource.length) return;
+
+    const leafColumns = columns.filter(
+      (col): col is ColumnType<T> => !("children" in col)
+    );
+
+    const wsData = [
+      leafColumns.map((col) => col.title?.toString() || ""),
+      ...dataSource.map((item) =>
+        leafColumns.map((col) => {
+          const key = col.dataIndex as keyof T;
+          return item[key] ?? "";
+        })
+      ),
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([wbout], { type: "application/octet-stream" });
+    saveAs(blob, exportFileName || "table-data.xlsx");
+  };
 
   return (
-    <div>
-      <Space style={{ marginBottom: 16 }}>
-        {/* Кнопка для ручного скачивания */}
-        <button onClick={handleExport}>Скачать CSV</button>
-      </Space>
-      <Table dataSource={dataSource} columns={columns} pagination={false} />
+    <div className="myTableContainer" style={style}>
+      <Table
+        dataSource={dataSource}
+        columns={columns.map((col) => ({
+          ...col,
+          onHeaderCell: () => ({
+            className: "myTableHeaderCell",
+          }),
+          align: "start",
+        }))}
+        pagination={false}
+        rowClassName={(record, index) =>
+          index % 2 === 0 ? "myTableRowEven" : "myTableRowOdd"
+        }
+        bordered
+        className={className}
+      />
+      {exportFileName && (
+        <Space className="exportButtons">
+          <Button onClick={exportCSV}>Export CSV</Button>
+          <Button onClick={exportExcel}>Export Excel</Button>
+        </Space>
+      )}
     </div>
   );
 }
+
+
+export default MyTable;

@@ -13,23 +13,34 @@ import {
 type Props = {
   data: {
     currency: string;
-    date: string;
-    amount: number;
+    date: string; // стартовая дата "YYYY-MM-DD"
+    amount: number; // количество дней
+    historicalRates: number[];
+    predictedRates: number[];
   };
 };
 
-const generateChartData = (startDate: string, days: number) => {
+const generateChartData = (
+  startDate: string,
+  historicalRates: number[],
+  predictedRates: number[]
+) => {
   const chartData: {
     name: string;
     historical?: number;
     forecast?: number;
   }[] = [];
 
-  const start = new Date(startDate); // уже "YYYY-MM-DD"
+  const start = new Date(startDate);
 
-  for (let i = -5; i < days; i++) {
+  // Кол-во исторических дней берем из длины historicalRates
+  const historicalDays = historicalRates.length;
+
+  // Создаем даты для исторических значений
+  for (let i = -historicalDays; i < 0; i++) {
     const date = new Date(start);
     date.setDate(date.getDate() + i);
+
     const label = date.toLocaleDateString("ru-RU", {
       day: "2-digit",
       month: "2-digit",
@@ -37,8 +48,23 @@ const generateChartData = (startDate: string, days: number) => {
 
     chartData.push({
       name: label,
-      historical: i < 0 ? 80 + i * 2 + Math.random() * 5 : undefined,
-      forecast: i >= 0 ? 85 + i * 2 + Math.random() * 5 : undefined,
+      historical: historicalRates[historicalDays + i], // индексация для исторических значений
+    });
+  }
+
+  // Добавляем даты для прогнозируемых значений
+  for (let i = 0; i < predictedRates.length; i++) {
+    const date = new Date(start);
+    date.setDate(date.getDate() + i);
+
+    const label = date.toLocaleDateString("ru-RU", {
+      day: "2-digit",
+      month: "2-digit",
+    });
+
+    chartData.push({
+      name: label,
+      forecast: predictedRates[i],
     });
   }
 
@@ -47,8 +73,8 @@ const generateChartData = (startDate: string, days: number) => {
 
 const MyChart: React.FC<Props> = ({ data }) => {
   const chartData = useMemo(() => {
-    return generateChartData(data.date, data.amount); // ✅ amount — уже number
-  }, [data.date, data.amount]);
+    return generateChartData(data.date, data.historicalRates, data.predictedRates);
+  }, [data.date, data.historicalRates, data.predictedRates]);
 
   return (
     <ResponsiveContainer width="100%" height="100%">
