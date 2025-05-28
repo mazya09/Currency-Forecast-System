@@ -2,7 +2,6 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 import { Select, DatePicker, Input, Button, notification } from "antd";
 import dayjs, { Dayjs } from "dayjs";
-import "./Forecast.scss";
 import MyChart from "../../components/Grafiki/Grafiki.tsx";
 import { requestStore } from "../../Store/Forecasting.ts";
 import MyTable from "../../components/Table/Table.tsx";
@@ -10,9 +9,8 @@ import currencyList from "../../JSON/currencyList.json";
 import Blockchildren from "../../components/blockchildren/blockchildren.tsx";
 import Blockwrapper from "../../components/blockwrapper/blockwrapper.tsx";
 import GoBackButton from "../../components/GoBackButton/GoBackButton.tsx";
-import Footer from "../Footer/Footer.jsx";
 
-export default observer(function Forecast() {
+export default observer(function ForecastActual() {
   const CONTROL_STYLE: React.CSSProperties = {
     width: 250,
     textAlign: "center",
@@ -106,7 +104,7 @@ export default observer(function Forecast() {
 
   return (
     <Blockwrapper>
-      <h1>Currency Forecast</h1>
+      <h1>Model Evaluation: Forecast vs Actual</h1>
       <Blockchildren>
         <Select
           style={CONTROL_STYLE}
@@ -136,7 +134,7 @@ export default observer(function Forecast() {
           onChange={(e) => setDays(Number(e.target.value))}
         />
         <Button type="primary" onClick={handleForecast} loading={isLoading}>
-          Forecast
+          Evalute Model
         </Button>
       </Blockchildren>
 
@@ -164,7 +162,6 @@ export default observer(function Forecast() {
           </div>
         </>
       )}
-
     </Blockwrapper>
   );
 });

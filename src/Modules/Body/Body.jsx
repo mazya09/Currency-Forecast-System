@@ -1,7 +1,8 @@
 import React from "react";
-import card1_json from "../../JSON/card1_json.json";
-import link_json from "../../JSON/link_json.json"
+import  { dataItems } from "../../JSON/card1_json";
+import link_json from "../../JSON/link_json.json";
 import "./Body.scss";
+import { NavLink } from "react-router-dom";
 
 export default function Body() {
   return (
@@ -14,7 +15,7 @@ export default function Body() {
           of Kyrgyzstan.
         </div>
         <div className="image_placeholder">
-          {card1_json.map((item, index) => (
+          {dataItems.map((item, index) => (
             <div key={index}>
               <img src={item.image} alt={item.title} width={100} />
               <h6>{item.title}</h6>
@@ -24,11 +25,17 @@ export default function Body() {
       </div>
       <div className="body_link">
         {link_json.map((item) => (
-          <div key={item.id}>
-            
+          <div key={item.id} className="menu-item">
             <h3>{item.title}</h3>
             <p>{item.description}</p>
-            <button>{item.button}</button>
+            <NavLink
+              to={item.path}
+              className={({ isActive }) =>
+                isActive ? "navlink active" : "navlink"
+              }
+            >
+              {item.button}
+            </NavLink>
           </div>
         ))}
       </div>

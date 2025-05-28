@@ -20,6 +20,14 @@ export default function Header() {
           Forecast
         </NavLink>
         <NavLink
+          to="/forecastActual"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+        >
+          Forecast vs Actual
+        </NavLink>
+        <NavLink
           to="/convert"
           className={({ isActive }) =>
             isActive ? "nav-link active" : "nav-link"

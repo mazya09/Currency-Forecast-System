@@ -1,13 +1,13 @@
 @import '../../index.scss';
 .conten_w {
     max-height: 90%;
-
+    flex: 1; /* чтобы занимать всё доступное пространство между хедером и футером */
     display: flex;
     flex-direction: column;
-    // justify-content: center;
     align-items: center;
     padding: 50px;
     gap: 20px;
+
  
     h1{
         color: $text_color;

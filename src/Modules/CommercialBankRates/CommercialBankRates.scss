@@ -1,0 +1,90 @@
+.myTableContainer {
+    position: relative;
+    width: 90%;
+    margin: 20px auto 40px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 16px 24px;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 32px;
+    font-weight: 700;
+    color: #fafafa ;
+}
+
+.bank-title {
+    font-weight: 600;
+    // margin-bottom: 12px;
+    // color: #4d1a1a;
+
+    .bank-link {
+        margin-left: 8px;
+        color: #1678ff;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            text-decoration: underline;
+        }
+    }
+}
+
+.myTable {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.myTableHeaderCell {
+    background-color: #fafafa ;
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    user-select: none;
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    padding: 12px 8px;
+    // border-bottom: 3px solid #5e1515;
+}
+
+.myTableCell {
+    font-size: 0.95rem;
+    padding: 12px 8px;
+    color: #333;
+    text-align: start;
+    user-select: text;
+    border: 1px solid #ccc;
+}
+
+.myTableRowEven {
+    background-color: #f7f7f7;
+    transition: background-color 0.3s ease;
+}
+
+.myTableRowOdd {
+    background-color: #ffffff;
+    transition: background-color 0.3s ease;
+}
+
+.myTable tbody tr:hover {
+    background-color: #ffefef !important;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    font-weight: 600;
+    margin: 20px 0;
+}
+.gobeck{
+    display: flex;
+    justify-content: center;
+}

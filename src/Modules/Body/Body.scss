@@ -70,7 +70,7 @@
         }
 
         h3 {
-            margin-top: 10px;
+            // margin-top: 10px;
             font-size: 18px;
             color: $text_color;
         }
@@ -94,58 +94,49 @@
 }
 
 .body_link {
-    width: 100%;
-    max-width: 1200px;
-
-    -webkit-box-shadow: 0 0 $shadow-size 0 $shadow-color;
-    -moz-box-shadow: 0 0 $shadow-size 0 $shadow-color;
-    box-shadow: 0 0 $shadow-size 0 $shadow-color;
-    background-color: white;
-
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-gap: 30px;
-    padding: 20px;
-    text-align: center;
-    border-radius: 12px;
-
-    div {
-        // display: grid;
-        // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        gap: 15px;
-        border: 0.2px solid $shadow-color;
-        padding: 20px;
-        border-radius: 12px;
-
-        button {
-            box-sizing: border-box;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 12px;
-            border: 1px solid #6878cf;
-            color: #6878cf;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-
-        button:hover {
-            transform: scale(1.03);
-            color: #6878cf;
-
-            font-style: normal;
-
-        }
-
-    }
-
-    p {
-        color: $body_description;
-        font-size: 16px;
-    }
-
+    gap: 30px;
+    max-width: 65%;
 }
+
+.menu-item {
+    display: flex;
+    // align-items: center;
+    flex-direction: column;
+    gap: 20px;
+  
+    p{
+        color: $body_description;
+    };
+    .navlink {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        text-align: center;
+        border-radius: 12px;
+        border: 1px solid #6878cf;
+        color: #6878cf;
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: all 0.3s ease;
+        flex-shrink: 0; /* Не сжимается */
+      transition: all 0.3s ease;
+  
+      &:hover {
+        transform: scale(1.03);
+        background-color: #6878cf;
+        color: white;
+      }
+  
+      &.active {
+        background-color: #4a5bb8;
+        color: white;
+        border-color: #4a5bb8;
+      }
+    }
+  }
+  

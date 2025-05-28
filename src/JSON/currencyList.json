@@ -1,5 +1,6 @@
 [
-  { "index": "USD", "name": "US Dollar", "rate": 1 },
-  { "index": "EUR", "name": "Euro", "rate": 0.92 },
-  { "index": "KGS", "name": "Kyrgyz Som", "rate": 87.5 }
+  { "index": "USD", "name": "USD", "rate": 1 },
+  { "index": "EUR", "name": "EUR", "rate": 0.92 },
+  { "index": "RUB", "name": "RUB", "rate": 87.5 },
+  { "index": "KZT", "name": "KZT", "rate": 87.5 }
 ]

@@ -17,6 +17,7 @@ type Props = {
     amount: number; // количество дней
     historicalRates: number[];
     predictedRates: number[];
+    chartData?: [];
   };
 };
 
